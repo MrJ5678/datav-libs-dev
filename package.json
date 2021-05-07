@@ -1,0 +1,19 @@
+{
+  "name": "datav-libs-dev",
+  "version": "1.0.0",
+  "description": "datav-components-library",
+  "main": "index.js",
+  "scripts": {
+    "dev": "rollup -wc rollup.config.dev.js"
+  },
+  "keywords": [],
+  "author": "hhhhhq <mr.j@tom.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "^2.47.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  },
+  "dependencies": {
+    "sam-test-data": "0.0.5"
+  }
+}
