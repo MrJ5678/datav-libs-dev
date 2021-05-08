@@ -1,6 +1,5 @@
-import data from "sam-test-data"
+import Test from "./Test.vue"
 
-console.log(data.random(), data.a, data.b)
-console.log("hello rollup1")
-
-module.exports = {}
+export default function (Vue) {
+  Vue.component("TestComponent", Test)
+}
