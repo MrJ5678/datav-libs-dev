@@ -8,8 +8,8 @@ const vue = require("rollup-plugin-vue")
 const postcss = require("rollup-plugin-postcss")
 
 const inputPath = path.resolve(__dirname, "./src/index.js")
-const outputUmdPath = path.resolve(__dirname, "./dist/datav.min.js")
-const outputEsPath = path.resolve(__dirname, "./dist/datav.es.min.js")
+const outputUmdPath = path.resolve(__dirname, "./dist/index.min.js")
+const outputEsPath = path.resolve(__dirname, "./dist/index.es.min.js")
 
 module.exports = {
   input: inputPath,
