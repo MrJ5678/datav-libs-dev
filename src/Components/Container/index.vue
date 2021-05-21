@@ -1,6 +1,8 @@
 <template>
   <div id="container" :ref="refName">
-    <slot></slot>
+    <template v-if="ready">
+      <slot></slot>
+    </template>
   </div>
 </template>
 
@@ -19,13 +21,15 @@ export default {
     const height = ref(0)
     const originalWidth = ref(0)
     const originalHeight = ref(0)
-    let context, dom
+    const ready = ref(false)
+
+    let context, dom, observer
 
     const initSize = () => {
       return new Promise(resolve => {
         nextTick(() => {
           dom = context.$refs[refName]
-          console.log(dom)
+          // console.log(dom)
           if (ctx.options && ctx.options.width && ctx.options.height) {
             // 组件外人为传入的 尺寸
             width.value = ctx.options.width
@@ -40,12 +44,12 @@ export default {
             originalWidth.value = screen.width
             originalHeight.value = screen.height
           }
-          console.log(
-            width.value,
-            height.value,
-            originalWidth.value,
-            originalHeight.value
-          )
+          // console.log(
+          //   width.value,
+          //   height.value,
+          //   originalWidth.value,
+          //   originalHeight.value
+          // )
 
           resolve()
         })
@@ -69,17 +73,35 @@ export default {
       // 大屏最终 宽高
       const realWidth = width.value || originalWidth.value
       const realHeight = height.value || originalHeight.value
-      console.log(currentWidth, currentHeight)
+      // console.log(currentWidth, currentHeight)
       const widthScale = currentWidth / realWidth
       const heightScale = currentHeight / realHeight
 
       dom.style.transform = `scale(${widthScale}, ${heightScale})`
     }
 
-    const onResize = async () => {
-      console.log("onResize")
+    const onResize = async e => {
+      // console.log("onResize", e)
       await initSize()
       updateScale()
+    }
+
+    const initMutaionObserver = () => {
+      const MutationObserver = window.MutationObserver
+      observer = new MutationObserver(onResize)
+      observer.observe(dom, {
+        attributes: true,
+        attributeFilter: ["style"],
+        attributeOldValue: true,
+      })
+    }
+
+    const removeMutationObserver = () => {
+      if (observer) {
+        observer.disconnect()
+        observer.takeRecords()
+        observer = null
+      }
     }
 
     onMounted(async () => {
@@ -88,14 +110,18 @@ export default {
       updateSize()
       updateScale()
       window.addEventListener("resize", debounce(500, onResize))
+      initMutaionObserver()
+      ready.value = true
     })
 
     onUnmounted(() => {
       window.removeEventListener("resize", onResize)
+      removeMutationObserver()
     })
 
     return {
       refName,
+      ready,
     }
   },
 }

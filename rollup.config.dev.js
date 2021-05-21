@@ -34,6 +34,15 @@ module.exports = {
     vue(),
     babel({
       exclude: "node_modules/**",
+      runtimeHelpers: true,
+      plugins: [
+        [
+          "@babel/plugin-transform-runtime",
+          {
+            regenerator: true,
+          },
+        ],
+      ],
     }),
     resolve(),
     commonjs(),
@@ -42,5 +51,5 @@ module.exports = {
       plugins: [],
     }),
   ],
-  external: ["vue"],
+  external: ["vue", "echarts"],
 }
